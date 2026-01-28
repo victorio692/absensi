@@ -1,0 +1,26 @@
+1. Buka browser dan login ke http://localhost:8080
+   Username: admin
+   Password: admin123
+
+2. Pergi ke menu: Admin Panel > Lokasi QR Code > Tambah Lokasi
+
+3. Isi form:
+   - Nama Lokasi: "Test Lokasi [tanggal hari ini]"
+   - Keterangan: "Testing form submission"
+   - Lokasi Aktif: Centang checkbox
+
+4. KLIK "Simpan Lokasi"
+
+5. CATAT APA YANG TERJADI:
+   - Apakah halaman berubah/refresh?
+   - Apakah muncul pesan (hijau untuk sukses, merah untuk error)?
+   - Apakah kembali ke list lokasi atau tetap di form?
+   - Bagaimana waktu responsenya (cepat/lambat)?
+
+6. Buka developer tools (F12 > Network tab)
+   - Lihat request ke /admin/qr-location/store
+   - Status code apa? (200, 303, 500?)
+   - Response apa yang diterima?
+
+7. Refresh halaman (F5) dan cek apakah lokasi yang baru ditambah
+   muncul di list atau tidak

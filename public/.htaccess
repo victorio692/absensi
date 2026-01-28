@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Jika request adalah file yang ada, skip
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # Jika request adalah folder yang ada, skip
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Arahkan semua request ke index.php
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
