@@ -15,7 +15,7 @@ class CalendarHelper
      * @param int $year
      * @return array
      */
-    public static function generateCalendarData($siswa_id, $month = null, $year = null)
+    public function generateCalendarData($siswa_id, $month = null, $year = null)
     {
         if ($month === null) $month = (int)date('m');
         if ($year === null) $year = (int)date('Y');
@@ -98,7 +98,7 @@ class CalendarHelper
      * @param int $siswa_id
      * @return array
      */
-    private static function getDateStatus($date, $absensiByDate, $izinSakitByDate, $siswa_id)
+    private function getDateStatus($date, $absensiByDate, $izinSakitByDate, $siswa_id)
     {
         // Priority 1: Check approved izin/sakit
         if (isset($izinSakitByDate[$date])) {
@@ -136,7 +136,7 @@ class CalendarHelper
     /**
      * Get month name in Indonesian
      */
-    private static function getMonthName($month)
+    private function getMonthName($month)
     {
         $months = [
             'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -148,7 +148,7 @@ class CalendarHelper
     /**
      * Get color class untuk status
      */
-    public static function getStatusColor($status)
+    public function getStatusColor($status)
     {
         $colors = [
             'hadir' => 'bg-success text-white',      // Green
@@ -165,7 +165,7 @@ class CalendarHelper
     /**
      * Get icon untuk status
      */
-    public static function getStatusIcon($status)
+    public function getStatusIcon($status)
     {
         $icons = [
             'hadir' => 'fas fa-check-circle',
@@ -182,7 +182,7 @@ class CalendarHelper
     /**
      * Get label untuk status
      */
-    public static function getStatusLabel($status)
+    public function getStatusLabel($status)
     {
         $labels = [
             'hadir' => 'Hadir',

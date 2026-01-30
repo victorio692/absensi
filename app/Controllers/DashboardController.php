@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Models\SiswaModel;
 use App\Models\AbsensiModel;
-use App\Helpers\CalendarHelper;
 use CodeIgniter\Controller;
 
 class DashboardController extends Controller
@@ -59,7 +58,8 @@ class DashboardController extends Controller
         $riwayatAbsensi = $absensiModel->getRiwayatSiswa($siswaData['id']);
 
         // Generate calendar data untuk bulan ini
-        $calendarData = CalendarHelper::generateCalendarData($siswaData['id']);
+        $calendarHelper = new \App\Helpers\CalendarHelper();
+        $calendarData = $calendarHelper->generateCalendarData($siswaData['id']);
 
         $data = [
             'title'                 => 'Dashboard Siswa',

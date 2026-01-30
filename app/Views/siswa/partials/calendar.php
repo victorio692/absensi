@@ -1,8 +1,6 @@
 <?php
 // Partial view untuk menampilkan calendar absensi bulanan
 // Include dari dashboard dengan: <?= view('siswa/partials/calendar', $calendarData) ?>
-
-use App\Helpers\CalendarHelper;
 ?>
 
 <div class="card mb-4">
@@ -92,7 +90,18 @@ use App\Helpers\CalendarHelper;
                             >
                                 <div class="calendar-day-number"><?= $day['day'] ?></div>
                                 <div class="calendar-day-status">
-                                    <i class="<?= CalendarHelper::getStatusIcon($day['status']) ?>"></i>
+                                    <i class="<?php 
+                                        $icons = [
+                                            'hadir' => 'fas fa-check-circle',
+                                            'terlambat' => 'fas fa-clock',
+                                            'izin' => 'fas fa-file-alt',
+                                            'sakit' => 'fas fa-heartbeat',
+                                            'alpha' => 'fas fa-times-circle',
+                                            'libur' => 'fas fa-calendar-alt',
+                                            'future' => 'fas fa-calendar',
+                                        ];
+                                        echo $icons[$day['status']] ?? 'fas fa-question-circle';
+                                    ?>"></i>
                                 </div>
                             </div>
                         <?php endif; ?>
