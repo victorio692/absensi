@@ -14,42 +14,43 @@
     </div>
     <div class="card-body">
         <!-- Legend -->
-        <div class="mb-4 p-3 bg-light rounded">
-            <div class="row g-3">
+        <div class="mb-4 p-4 bg-light rounded border-start border-5 border-primary">
+            <h6 class="mb-3 fw-bold">Keterangan Status:</h6>
+            <div class="row g-4">
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-success" style="width: 30px; height: 30px;"></span>
-                        <small>Hadir</small>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #28a745;"></div>
+                        <small class="fw-semibold">Hadir</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-warning" style="width: 30px; height: 30px;"></span>
-                        <small>Terlambat</small>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ffc107;"></div>
+                        <small class="fw-semibold">Terlambat</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-info" style="width: 30px; height: 30px;"></span>
-                        <small>Izin</small>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #0dcaf0;"></div>
+                        <small class="fw-semibold">Izin</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-primary" style="width: 30px; height: 30px;"></span>
-                        <small>Sakit</small>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #667eea;"></div>
+                        <small class="fw-semibold">Sakit</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-danger" style="width: 30px; height: 30px;"></span>
-                        <small>Alpha</small>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #dc3545;"></div>
+                        <small class="fw-semibold">Alpha</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary" style="width: 30px; height: 30px;"></span>
-                        <small>Libur</small>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #6c757d;"></div>
+                        <small class="fw-semibold">Libur</small>
                     </div>
                 </div>
             </div>
@@ -131,6 +132,26 @@
 </div>
 
 <style>
+.legend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-color {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.legend-item:hover .legend-color {
+    transform: scale(1.1);
+}
+
 .calendar-container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
