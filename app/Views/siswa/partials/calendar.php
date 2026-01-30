@@ -18,37 +18,37 @@
             <div class="row g-3">
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-success" style="width: 30px; height: 30px;"></span>
+                        <span class="legend-dot" style="background-color: #10b981;"></span>
                         <small>Hadir</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-warning" style="width: 30px; height: 30px;"></span>
+                        <span class="legend-dot" style="background-color: #f59e0b;"></span>
                         <small>Terlambat</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-info" style="width: 30px; height: 30px;"></span>
+                        <span class="legend-dot" style="background-color: #06b6d4;"></span>
                         <small>Izin</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-primary" style="width: 30px; height: 30px;"></span>
+                        <span class="legend-dot" style="background-color: #8b5cf6;"></span>
                         <small>Sakit</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-danger" style="width: 30px; height: 30px;"></span>
+                        <span class="legend-dot" style="background-color: #ef4444;"></span>
                         <small>Alpha</small>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-4 col-6">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary" style="width: 30px; height: 30px;"></span>
+                        <span class="legend-dot" style="background-color: #6b7280;"></span>
                         <small>Libur</small>
                     </div>
                 </div>
@@ -131,6 +131,12 @@
 </div>
 
 <style>
+.legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
 .calendar-container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
