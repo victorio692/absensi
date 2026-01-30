@@ -31,8 +31,9 @@ class IzinSakitModel extends Model
      */
     public function getWithSiswa($filters = [])
     {
-        $builder = $this->select('izin_sakit.*, siswa.nama, siswa.kelas, siswa.nis')
+        $builder = $this->select('izin_sakit.*, users.nama, siswa.kelas, siswa.nis')
             ->join('siswa', 'siswa.id = izin_sakit.siswa_id', 'left')
+            ->join('users', 'users.id = siswa.user_id', 'left')
             ->orderBy('izin_sakit.tanggal', 'DESC')
             ->orderBy('izin_sakit.created_at', 'DESC');
 

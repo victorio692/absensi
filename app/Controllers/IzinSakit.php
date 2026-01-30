@@ -22,7 +22,7 @@ class IzinSakit extends BaseController
     public function create()
     {
         // Check if user is student
-        if (session()->get('role') !== 'siswa') {
+        if (session()->get('user_role') !== 'siswa') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -39,7 +39,7 @@ class IzinSakit extends BaseController
      */
     public function store()
     {
-        if (session()->get('role') !== 'siswa') {
+        if (session()->get('user_role') !== 'siswa') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -117,7 +117,7 @@ class IzinSakit extends BaseController
      */
     public function riwayat()
     {
-        if (session()->get('role') !== 'siswa') {
+        if (session()->get('user_role') !== 'siswa') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -142,7 +142,7 @@ class IzinSakit extends BaseController
      */
     public function detail($id)
     {
-        if (session()->get('role') !== 'siswa') {
+        if (session()->get('user_role') !== 'siswa') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -166,7 +166,7 @@ class IzinSakit extends BaseController
      */
     public function downloadBukti($id)
     {
-        if (session()->get('role') !== 'siswa') {
+        if (session()->get('user_role') !== 'siswa') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 

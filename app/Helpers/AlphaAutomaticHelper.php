@@ -136,8 +136,9 @@ class AlphaAutomaticHelper
         $absensiModel = new AbsensiModel();
 
         $alpha = $absensiModel
-            ->select('absensi.*, siswa.nama, siswa.kelas')
+            ->select('absensi.*, users.nama, siswa.kelas')
             ->join('siswa', 'siswa.id = absensi.siswa_id', 'left')
+            ->join('users', 'users.id = siswa.user_id', 'left')
             ->where('absensi.tanggal', $tanggal)
             ->where('absensi.status', 'alpha')
             ->where('absensi.source', 'system')

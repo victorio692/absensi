@@ -21,37 +21,42 @@ class AdminIzinSakit extends BaseController
      */
     public function index()
     {
-        if (session()->get('role') !== 'admin') {
+        if (session()->get('user_role') !== 'admin') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
-        $filters = [
-            'status' => $this->request->getGet('status') ?? '',
-            'jenis' => $this->request->getGet('jenis') ?? '',
-            'start_date' => $this->request->getGet('start_date') ?? '',
-            'end_date' => $this->request->getGet('end_date') ?? '',
-        ];
+        try {
+            $filters = [
+                'status' => $this->request->getGet('status') ?? '',
+                'jenis' => $this->request->getGet('jenis') ?? '',
+                'start_date' => $this->request->getGet('start_date') ?? '',
+                'end_date' => $this->request->getGet('end_date') ?? '',
+            ];
 
-        $query = $this->izinSakitModel->getWithSiswa($filters);
-        $izinSakitList = $query->findAll();
+            $query = $this->izinSakitModel->getWithSiswa($filters);
+            $izinSakitList = $query->findAll();
 
-        // Hitung statistik
-        $stats = [
-            'pending' => $this->izinSakitModel->where('status', 'pending')->countAllResults(),
-            'approved' => $this->izinSakitModel->where('status', 'approved')->countAllResults(),
-            'rejected' => $this->izinSakitModel->where('status', 'rejected')->countAllResults(),
-            'izin' => $this->izinSakitModel->where('jenis', 'izin')->countAllResults(),
-            'sakit' => $this->izinSakitModel->where('jenis', 'sakit')->countAllResults(),
-        ];
+            // Hitung statistik
+            $stats = [
+                'pending' => $this->izinSakitModel->where('status', 'pending')->countAllResults(),
+                'approved' => $this->izinSakitModel->where('status', 'approved')->countAllResults(),
+                'rejected' => $this->izinSakitModel->where('status', 'rejected')->countAllResults(),
+                'izin' => $this->izinSakitModel->where('jenis', 'izin')->countAllResults(),
+                'sakit' => $this->izinSakitModel->where('jenis', 'sakit')->countAllResults(),
+            ];
 
-        $data = [
-            'title' => 'Manajemen Izin & Sakit',
-            'izinSakitList' => $izinSakitList,
-            'stats' => $stats,
-            'filters' => $filters,
-        ];
+            $data = [
+                'title' => 'Manajemen Izin & Sakit',
+                'izinSakitList' => $izinSakitList,
+                'stats' => $stats,
+                'filters' => $filters,
+            ];
 
-        return view('admin/izin_sakit/index', $data);
+            return view('admin/izin_sakit/index', $data);
+        } catch (\Exception $e) {
+            log_message('error', 'AdminIzinSakit::index() Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -59,12 +64,13 @@ class AdminIzinSakit extends BaseController
      */
     public function detail($id)
     {
-        if (session()->get('role') !== 'admin') {
+        if (session()->get('user_role') !== 'admin') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
-        $izin = $this->izinSakitModel->select('izin_sakit.*, siswa.nama, siswa.kelas, siswa.nis')
+        $izin = $this->izinSakitModel->select('izin_sakit.*, users.nama, siswa.kelas, siswa.nis')
             ->join('siswa', 'siswa.id = izin_sakit.siswa_id', 'left')
+            ->join('users', 'users.id = siswa.user_id', 'left')
             ->where('izin_sakit.id', $id)
             ->first();
 
@@ -85,7 +91,7 @@ class AdminIzinSakit extends BaseController
      */
     public function approve($id)
     {
-        if (session()->get('role') !== 'admin') {
+        if (session()->get('user_role') !== 'admin') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -127,7 +133,7 @@ class AdminIzinSakit extends BaseController
      */
     public function reject($id)
     {
-        if (session()->get('role') !== 'admin') {
+        if (session()->get('user_role') !== 'admin') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -151,7 +157,7 @@ class AdminIzinSakit extends BaseController
      */
     public function downloadBukti($id)
     {
-        if (session()->get('role') !== 'admin') {
+        if (session()->get('user_role') !== 'admin') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
@@ -175,7 +181,7 @@ class AdminIzinSakit extends BaseController
      */
     public function delete($id)
     {
-        if (session()->get('role') !== 'admin') {
+        if (session()->get('user_role') !== 'admin') {
             return redirect()->to('/login')->with('error', 'Akses ditolak');
         }
 
