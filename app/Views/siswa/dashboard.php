@@ -68,6 +68,9 @@
     </div>
 </div>
 
+<!-- Kalender Absensi Bulanan -->
+<?= view('siswa/partials/calendar', $calendarData) ?>
+
 <!-- Riwayat Absensi Bulan Ini -->
 <div class="card">
     <div class="card-header">
