@@ -19,7 +19,7 @@ class IzinSakitModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $validationRules = [
-        'siswa_id' => 'required|integer|is_not_empty',
+        'siswa_id' => 'required|integer',
         'tanggal' => 'required|valid_date',
         'jenis' => 'required|in_list[izin,sakit]',
         'alasan' => 'required|string|min_length[5]|max_length[500]',

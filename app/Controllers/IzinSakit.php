@@ -72,15 +72,16 @@ class IzinSakit extends BaseController
                 ->with('error', 'Anda sudah mengajukan izin/sakit untuk tanggal ' . $tanggal);
         }
 
-        // Cek apakah sudah ada absensi untuk tanggal tersebut
+        // Cek apakah sudah ada absensi (QR scan) untuk tanggal tersebut
         $existingAbsensi = $this->absensiModel
             ->where('siswa_id', $siswa_id)
-            ->where('DATE(created_at)', $tanggal)
+            ->where('DATE(tanggal)', $tanggal)
+            ->where('source', 'qr') // Hanya cek QR scan, bukan dari sistem
             ->first();
 
         if ($existingAbsensi) {
             return redirect()->back()
-                ->with('error', 'Anda sudah melakukan absensi untuk tanggal ' . $tanggal);
+                ->with('error', 'Anda sudah melakukan absensi (scan QR) untuk tanggal ' . $tanggal);
         }
 
         $data = [
