@@ -11,9 +11,8 @@ class QrDailyModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $allowedFields = ['location_id', 'tanggal', 'token'];
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
+    protected $allowedFields = ['location_id', 'tanggal', 'token', 'created_at'];
+    protected $useTimestamps = false;
 
     /**
      * Secret key untuk generate token (simpan di .env)

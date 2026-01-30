@@ -19,9 +19,9 @@
 <?php endif; ?>
 
 <div class="row">
-    <?php if (!empty($qrToday)): ?>
-        <?php foreach ($qrToday as $qr): ?>
-            <div class="col-md-6 col-lg-4 mb-4">
+    <?php if (!empty($qr_daily)): ?>
+        <?php foreach ($qr_daily as $qr): ?>
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
                     <div class="card-header">
                         <i class="fas fa-map-marker-alt"></i> <?= $qr['nama_lokasi'] ?>
@@ -35,7 +35,7 @@
                         <button class="btn btn-info btn-sm w-100" onclick="printQr(<?= $qr['location_id'] ?>, '<?= $qr['nama_lokasi'] ?>')">
                             <i class="fas fa-print"></i> Cetak
                         </button>
-                        <a href="/admin/qr-daily/<?= $qr['location_id'] ?>/show" class="btn btn-warning btn-sm w-100 mt-2">
+                        <a href="<?= base_url('admin/qr-daily/' . $qr['location_id'] . '/show') ?>" class="btn btn-warning btn-sm w-100 mt-2">
                             <i class="fas fa-eye"></i> Detail
                         </a>
                     </div>

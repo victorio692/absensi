@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<h1 class="mb-4"><i class="fas fa-map-marker-alt"></i> Lokasi QR Code</h1>
+<h1 class="mb-4"><i class="fas fa-map-marker-alt"></i> Lokasi Absensi</h1>
 
 <?php if (session()->has('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -18,72 +18,82 @@
     </div>
 <?php endif; ?>
 
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-list"></i> Daftar Lokasi QR</span>
-        <a href="/admin/qr-location/create" class="btn btn-primary btn-sm">
-            <i class="fas fa-plus"></i> Tambah Lokasi
-        </a>
-    </div>
-    <div class="card-body">
-        <?php if (!empty($locations)): ?>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Lokasi</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $no = 1; foreach ($locations as $loc): ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td>
-                                    <i class="fas fa-location-dot"></i> 
-                                    <strong><?= $loc['nama_lokasi'] ?></strong>
-                                </td>
-                                <td>
-                                    <?php if ($loc['aktif']): ?>
-                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Aktif</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-secondary"><i class="fas fa-times-circle"></i> Nonaktif</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <a href="/admin/qr-location/<?= $loc['id'] ?>/edit" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <a href="/admin/qr-daily/<?= $loc['id'] ?>/show" class="btn btn-info btn-sm">
-                                        <i class="fas fa-qrcode"></i> Cetak QR
-                                    </a>
-                                    <a href="/admin/qr-location/<?= $loc['id'] ?>/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php else: ?>
-            <div class="alert alert-info text-center">
-                <i class="fas fa-info-circle"></i> Belum ada lokasi QR. <a href="/admin/qr-location/create">Tambah sekarang</a>
-            </div>
-        <?php endif; ?>
-    </div>
-</div>
+<?php if (!empty($locations)): ?>
+    <div class="row">
+        <?php foreach ($locations as $loc): ?>
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="fas fa-location-dot text-danger"></i>
+                                    <?= $loc['nama_lokasi'] ?>
+                                </h5>
+                                <small class="text-muted"><?= $loc['keterangan'] ?></small>
+                            </div>
+                            <span class="badge <?= $loc['aktif'] ? 'bg-success' : 'bg-secondary' ?>">
+                                <?= $loc['aktif'] ? 'Aktif' : 'Nonaktif' ?>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <!-- Edit -->
+                            <a href="<?= base_url('admin/qr-location/' . $loc['id'] . '/edit') ?>" 
+                               class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-edit"></i> Edit Lokasi
+                            </a>
 
-<div class="card mt-4">
-    <div class="card-body">
-        <h5><i class="fas fa-info-circle"></i> Informasi</h5>
-        <p class="text-muted mb-0">
-            Lokasi QR adalah tempat-tempat di sekolah tempat QR Code fisik dipasang (contoh: Gerbang, Aula, Ruang Kelas, dll). 
-            Setiap lokasi akan memiliki QR Code yang berbeda dan berubah setiap hari.
-        </p>
+                            <!-- Cetak QR -->
+                            <a href="<?= base_url('admin/qr-daily/' . $loc['id'] . '/show') ?>" 
+                               class="btn btn-outline-info btn-sm <?= !$loc['aktif'] ? 'disabled' : '' ?>"
+                               <?= !$loc['aktif'] ? 'onclick="return false;"' : '' ?>>
+                                <i class="fas fa-print"></i> Cetak QR Code
+                            </a>
+
+                            <!-- Monitor - Hanya tampil jika aktif -->
+                            <?php if ($loc['aktif']): ?>
+                                <a href="<?= base_url('admin/monitor/display/' . $loc['id']) ?>" 
+                                   class="btn btn-outline-primary btn-sm" target="_blank">
+                                    <i class="fas fa-tv"></i> Monitor Display
+                                </a>
+                            <?php else: ?>
+                                <button class="btn btn-outline-secondary btn-sm disabled">
+                                    <i class="fas fa-tv"></i> Monitor (Nonaktif)
+                                </button>
+                            <?php endif; ?>
+
+                            <!-- Hapus -->
+                            <a href="<?= base_url('admin/qr-location/' . $loc['id'] . '/delete') ?>" 
+                               class="btn btn-outline-danger btn-sm"
+                               onclick="return confirm('Yakin hapus lokasi ini? Data absensi akan tetap tersimpan.')">
+                                <i class="fas fa-trash"></i> Hapus Lokasi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
-</div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="<?= base_url('admin/qr-location/create') ?>" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus-circle"></i> Tambah Lokasi Baru
+            </a>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="text-muted mt-3">Belum ada lokasi absensi</p>
+            <a href="<?= base_url('admin/qr-location/create') ?>" class="btn btn-primary mt-3">
+                <i class="fas fa-plus"></i> Tambah Lokasi Pertama
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
 
 <?= $this->endSection() ?>

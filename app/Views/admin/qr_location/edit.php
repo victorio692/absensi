@@ -27,7 +27,7 @@
 
     <!-- Form Card -->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-warning text-dark">
                     <h5 class="card-title mb-0">
@@ -48,8 +48,11 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('admin/qr-location/' . $location['id'] . '/update') ?>" method="post">
+                    <form action="<?= base_url('admin/qr-location/update') ?>" method="POST" accept-charset="utf-8">
                         <?= csrf_field() ?>
+                        
+                        <!-- Hidden ID field -->
+                        <input type="hidden" name="id" value="<?= $location['id'] ?>">
 
                         <!-- Nama Lokasi -->
                         <div class="mb-3">
@@ -90,9 +93,9 @@
                         </div>
 
                         <!-- Buttons -->
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-warning btn-lg flex-grow-1">
-                                <i class="fas fa-save"></i> Simpan Perubahan
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-save"></i> Simpan
                             </button>
                             <a href="<?= base_url('admin/qr-location') ?>" class="btn btn-secondary btn-lg">
                                 <i class="fas fa-times"></i> Batal
@@ -104,4 +107,5 @@
         </div>
     </div>
 </div>
+
 <?= $this->endSection() ?>

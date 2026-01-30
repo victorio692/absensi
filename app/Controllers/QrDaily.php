@@ -25,6 +25,25 @@ class QrDaily extends BaseController
     {
         $today = date('Y-m-d');
         
+        // Auto-generate QR untuk semua lokasi aktif jika belum ada untuk hari ini
+        $qrLocationModel = model('App\Models\QrLocationModel');
+        $aktiveLokasi = $qrLocationModel->getAktif();
+        
+        // Generate QR untuk setiap lokasi aktif
+        foreach ($aktiveLokasi as $lokasi) {
+            // Cek apakah sudah ada QR untuk hari ini
+            $existing = $this->qrDailyModel
+                ->where('location_id', $lokasi['id'])
+                ->where('tanggal', $today)
+                ->first();
+            
+            // Jika belum ada, generate
+            if (!$existing) {
+                $this->qrDailyModel->generateQrForLocation($lokasi['id'], $today);
+            }
+        }
+        
+        // Ambil semua QR untuk hari ini
         $qrDaily = $this->qrDailyModel
             ->select('qr_daily.*, qr_location.nama_lokasi')
             ->join('qr_location', 'qr_location.id = qr_daily.location_id')
@@ -45,10 +64,31 @@ class QrDaily extends BaseController
      */
     public function show($id = null)
     {
+        // Jika $id adalah location_id, cari QR untuk hari ini
+        $locationId = $id;
+        $today = date('Y-m-d');
+
+        // Cek apakah QR untuk hari ini sudah ada
         $qrDaily = $this->qrDailyModel
             ->select('qr_daily.*, qr_location.nama_lokasi')
             ->join('qr_location', 'qr_location.id = qr_daily.location_id')
-            ->find($id);
+            ->where('qr_daily.location_id', $locationId)
+            ->where('qr_daily.tanggal', $today)
+            ->first();
+
+        // Jika tidak ada, generate otomatis
+        if (!$qrDaily) {
+            // Generate QR untuk hari ini
+            $this->qrDailyModel->generateQrForLocation($locationId, $today);
+
+            // Ambil lagi
+            $qrDaily = $this->qrDailyModel
+                ->select('qr_daily.*, qr_location.nama_lokasi')
+                ->join('qr_location', 'qr_location.id = qr_daily.location_id')
+                ->where('qr_daily.location_id', $locationId)
+                ->where('qr_daily.tanggal', $today)
+                ->first();
+        }
 
         if (!$qrDaily) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();

@@ -10,7 +10,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="/css/style.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
     
     <style>
         :root {
@@ -279,11 +280,8 @@
                 <li><a href="/admin/siswa" class="<?= strpos($title, 'Siswa') !== false ? 'active' : '' ?>">
                     <i class="fas fa-users"></i> Kelola Siswa
                 </a></li>
-                <li><a href="/admin/qr-location" class="<?= strpos($title, 'Lokasi QR') !== false ? 'active' : '' ?>">
+                <li><a href="/admin/qr-location" class="<?= strpos($title, 'Lokasi Absensi|Lokasi QR') !== false ? 'active' : '' ?>">
                     <i class="fas fa-map-marker-alt"></i> Lokasi Absensi
-                </a></li>
-                <li><a href="/admin/qr-daily" class="<?= strpos($title, 'QR Code Harian') !== false ? 'active' : '' ?>">
-                    <i class="fas fa-qrcode"></i> Generate QR
                 </a></li>
                 <li><a href="/admin/absensi" class="<?= strpos($title, 'Laporan') !== false ? 'active' : '' ?>">
                     <i class="fas fa-file-chart-line"></i> Laporan Absensi
@@ -344,6 +342,96 @@
             setTimeout(() => {
                 new bootstrap.Alert(alert).close();
             }, 5000);
+        });
+    </script>
+
+    <!-- Mobile Sidebar Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (navbar && sidebar) {
+                const toggler = document.createElement('button');
+                toggler.className = 'btn btn-outline-light ms-auto';
+                toggler.style.display = 'none';
+                toggler.innerHTML = '<i class="fas fa-bars"></i>';
+                toggler.id = 'sidebarToggle';
+                
+                // Show toggle on mobile
+                function updateSidebarToggle() {
+                    if (window.innerWidth <= 991) {
+                        toggler.style.display = 'inline-block';
+                    } else {
+                        toggler.style.display = 'none';
+                        sidebar.classList.remove('show');
+                    }
+                }
+                
+                toggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sidebar.classList.toggle('show');
+                });
+                
+                // Add toggle to navbar
+                const navContent = navbar.querySelector('.navbar-collapse');
+                if (navContent) {
+                    navContent.parentElement.insertBefore(toggler, navContent);
+                }
+                
+                window.addEventListener('resize', updateSidebarToggle);
+                updateSidebarToggle();
+                
+                // Close sidebar when link clicked
+                sidebar.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth <= 991) {
+                            sidebar.classList.remove('show');
+                        }
+                    });
+                });
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        document.querySelectorAll('.alert:not(.alert-permanent)').forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
+        });
+
+        // Add animation to elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-slide-up');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .list-group-item').forEach(el => {
+            observer.observe(el);
         });
     </script>
 

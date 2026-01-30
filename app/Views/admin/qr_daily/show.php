@@ -2,14 +2,14 @@
 
 <?= $this->section('content') ?>
 
-<h1 class="mb-4"><i class="fas fa-qrcode"></i> Cetak QR - <?= $lokasi['nama_lokasi'] ?></h1>
+<h1 class="mb-4"><i class="fas fa-qrcode"></i> Cetak QR - <?= $qr_daily['nama_lokasi'] ?></h1>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-12 col-md-8">
         <div class="card">
             <div class="card-header">
-                <i class="fas fa-map-marker-alt"></i> <?= $lokasi['nama_lokasi'] ?>
-                <small class="text-muted float-end">Tanggal: <?= $tanggal ?></small>
+                <i class="fas fa-map-marker-alt"></i> <?= $qr_daily['nama_lokasi'] ?>
+                <small class="text-muted float-end">Tanggal: <?= tanggalIndo($qr_daily['tanggal']) ?></small>
             </div>
             <div class="card-body text-center">
                 <div id="qrcode" style="display: inline-block; padding: 20px; background: white; border: 2px solid #ddd; border-radius: 5px;"></div>
@@ -21,7 +21,7 @@
                 <button class="btn btn-success" onclick="downloadQr()">
                     <i class="fas fa-download"></i> Download
                 </button>
-                <a href="/admin/qr-daily" class="btn btn-secondary">
+                <a href="<?= base_url('admin/qr-daily') ?>" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </div>
@@ -33,32 +33,32 @@
                 <table class="table table-sm mb-0">
                     <tr>
                         <td><strong>Lokasi</strong></td>
-                        <td><?= $lokasi['nama_lokasi'] ?></td>
+                        <td><?= $qr_daily['nama_lokasi'] ?></td>
                     </tr>
                     <tr>
                         <td><strong>Tanggal</strong></td>
-                        <td><?= $tanggal ?></td>
+                        <td><?= tanggalIndo($qr_daily['tanggal']) ?></td>
                     </tr>
                     <tr>
                         <td><strong>Token</strong></td>
-                        <td><code class="text-danger" style="font-size: 10px;"><?= substr($qrContent, 0, 50) ?>...</code></td>
+                        <td><code class="text-danger" style="font-size: 10px;"><?= substr($qr_daily['token'], 0, 50) ?>...</code></td>
                     </tr>
                     <tr>
                         <td><strong>QR Content</strong></td>
-                        <td><code style="font-size: 11px; word-break: break-all;"><?= $qrContent ?></code></td>
+                        <td><code style="font-size: 11px; word-break: break-all;"><?= $qr_daily['location_id'] . '|' . $qr_daily['tanggal'] . '|' . $qr_daily['token'] ?></code></td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-12 col-md-4">
         <div class="card">
             <div class="card-body">
                 <h5><i class="fas fa-lightbulb"></i> Tips Penggunaan</h5>
                 <ul class="small">
-                    <li>Cetak QR ini dan pasang di lokasi: <strong><?= $lokasi['nama_lokasi'] ?></strong></li>
-                    <li>QR Code ini hanya berlaku untuk <strong>hari ini (<?= $tanggal ?>)</strong></li>
+                    <li>Cetak QR ini dan pasang di lokasi: <strong><?= $qr_daily['nama_lokasi'] ?></strong></li>
+                    <li>QR Code ini hanya berlaku untuk <strong><?= tanggalIndo($qr_daily['tanggal']) ?></strong></li>
                     <li>QR baru akan otomatis di-generate setiap hari</li>
                     <li>Siswa scan QR ini untuk absen masuk</li>
                     <li>Ukuran cetak minimal A4 untuk hasil yang baik</li>
@@ -79,9 +79,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-    // Generate QR code
+    // Generate QR code dengan format: location_id|tanggal|token
+    const qrContent = "<?= $qr_daily['location_id'] . '|' . $qr_daily['tanggal'] . '|' . $qr_daily['token'] ?>";
+    
     new QRCode(document.getElementById("qrcode"), {
-        text: "<?= $qrContent ?>",
+        text: qrContent,
         width: 300,
         height: 300,
         colorDark: "#000000",
@@ -93,7 +95,7 @@
         const canvas = document.querySelector('#qrcode canvas');
         const link = document.createElement('a');
         link.href = canvas.toDataURL();
-        link.download = 'QR-<?= strtoupper(str_replace(' ', '-', $lokasi['nama_lokasi'])) ?>-<?= date('Y-m-d') ?>.png';
+        link.download = 'QR-<?= strtoupper(str_replace(' ', '-', $qr_daily['nama_lokasi'])) ?>-<?= $qr_daily['tanggal'] ?>.png';
         link.click();
     }
 </script>

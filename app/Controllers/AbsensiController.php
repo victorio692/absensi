@@ -264,6 +264,34 @@ class AbsensiController extends Controller
     }
 
     /**
+     * Export Absensi ke PDF (Generate HTML Printable)
+     */
+    public function exportPDF()
+    {
+        $absensiModel = new AbsensiModel();
+
+        // Filter
+        $filters = [
+            'siswa_id'  => $this->request->getGet('siswa_id'),
+            'kelas'     => $this->request->getGet('kelas'),
+            'start_date' => $this->request->getGet('start_date'),
+            'end_date'   => $this->request->getGet('end_date'),
+        ];
+
+        // Ambil data absensi
+        $absensiList = $absensiModel->getAbsensiWithSiswa($filters)->findAll();
+
+        $data = [
+            'title'    => 'Laporan Absensi',
+            'absensi'  => $absensiList,
+            'filters'  => $filters,
+            'print_date' => date('d-m-Y H:i:s'),
+        ];
+
+        return view('admin/absensi/export_pdf', $data);
+    }
+
+    /**
      * Helper: Ambil siswa ID dari session
      */
     private function getSiswaIdFromSession()

@@ -138,32 +138,57 @@ class QrLocation extends BaseController
      */
     public function update($id = null)
     {
+        // Get ID dari POST atau parameter URL
         if (!$id) {
-            return redirect()->to(base_url('admin/qr-location'))
-                ->with('error', 'ID lokasi tidak valid');
+            $id = $this->request->getPost('id');
         }
-
+        
+        log_message('error', "========== UPDATE METHOD CALLED ==========");
+        log_message('error', "ID Parameter: {$id}");
+        log_message('error', "Request Method: " . strtoupper($this->request->getMethod()));
+        log_message('error', "POST Array Keys: " . json_encode(array_keys($this->request->getPost() ?? [])));
+        log_message('error', "POST nama_lokasi: " . ($this->request->getPost('nama_lokasi') ?? 'NOT SET'));
+        
+        // Validate ID
+        if (!$id) {
+            log_message('error', "ERROR: ID is null or empty!");
+            return redirect()->to(base_url('admin/qr-location'))->with('error', 'ID tidak valid');
+        }
+        
+        // Get location from database
         $db = \Config\Database::connect();
         $location = $db->table('qr_location')->where('id', $id)->get()->getRowArray();
-
+        
         if (!$location) {
-            return redirect()->to(base_url('admin/qr-location'))
-                ->with('error', 'Lokasi tidak ditemukan');
+            log_message('error', "ERROR: Location ID {$id} not found in database");
+            return redirect()->to(base_url('admin/qr-location'))->with('error', 'Lokasi tidak ditemukan');
         }
-
-        if ($this->request->getMethod() === 'post') {
+        
+        log_message('error', "Location found: {$location['nama_lokasi']}");
+        
+        // Check if POST or GET
+        $methodStr = strtoupper($this->request->getMethod());
+        log_message('error', "Method comparison: '{$methodStr}' === 'POST' ? " . ($methodStr === 'POST' ? 'TRUE' : 'FALSE'));
+        
+        if ($methodStr === 'POST' || $methodStr === 'post' || $this->request->getMethod() === 'post') {
+            log_message('error', "PROCESSING POST REQUEST...");
+            
             $nama_lokasi = trim($this->request->getPost('nama_lokasi') ?? '');
             $keterangan = trim($this->request->getPost('keterangan') ?? '');
             $aktif = $this->request->getPost('aktif') ? 1 : 0;
-
+            
+            log_message('error', "POST Data - Nama: '{$nama_lokasi}', Keterangan: '{$keterangan}', Aktif: {$aktif}");
+            
             // Validation
             if (empty($nama_lokasi) || strlen($nama_lokasi) < 3) {
-                session()->setFlashdata('error', 'Nama lokasi harus diisi minimal 3 karakter');
+                log_message('error', "VALIDATION FAILED: nama_lokasi is invalid");
+                session()->setFlashdata('error', 'Nama lokasi minimal 3 karakter');
                 return redirect()->back()->withInput();
             }
-
+            
             try {
-                // Update directly using database query builder
+                log_message('error', "Executing UPDATE query...");
+                
                 $updateResult = $db->table('qr_location')
                     ->where('id', $id)
                     ->update([
@@ -172,23 +197,29 @@ class QrLocation extends BaseController
                         'aktif' => $aktif,
                         'updated_at' => date('Y-m-d H:i:s'),
                     ]);
-
+                
+                log_message('error', "UPDATE RESULT: {$updateResult}");
+                
                 session()->setFlashdata('success', 'Lokasi QR berhasil diperbarui!');
+                log_message('error', "SUCCESS - Redirecting to list");
+                
                 return redirect()->to(base_url('admin/qr-location'));
             } catch (\Exception $e) {
+                log_message('error', "EXCEPTION: " . $e->getMessage());
                 session()->setFlashdata('error', 'Error: ' . $e->getMessage());
                 return redirect()->back()->withInput();
             }
+        } else {
+            log_message('error', "GET REQUEST - Showing edit form");
+            
+            $data = [
+                'title'      => 'Edit Lokasi QR',
+                'location'   => $location,
+                'validation' => \Config\Services::validation(),
+            ];
+            
+            return view('admin/qr_location/edit', $data);
         }
-
-        // GET request - show form
-        $data = [
-            'title'       => 'Edit Lokasi QR',
-            'location'    => $location,
-            'validation'  => \Config\Services::validation(),
-        ];
-
-        return view('admin/qr_location/edit', $data);
     }
 
     /**

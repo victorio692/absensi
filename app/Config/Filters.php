@@ -58,8 +58,8 @@ class Filters extends BaseFilters
         ],
         'after' => [
             // 'pagecache',   // Disabled for form submissions
-            'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
+            // 'performance', // Performance Metrics - DISABLED for speed
+            // 'toolbar',     // Debug Toolbar - DISABLED for speed
         ],
     ];
 

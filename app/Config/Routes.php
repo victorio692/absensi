@@ -7,6 +7,25 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // ===============================================
+// API Routes (JSON Response)
+// ===============================================
+
+// Auth API
+$routes->post('/api/auth/login-siswa', 'Api\AuthController::loginSiswa');
+$routes->post('/api/auth/login-admin', 'Api\AuthController::loginAdmin');
+$routes->get('/api/auth/logout', 'Api\AuthController::logout');
+
+// Student API (Protected - requires session)
+$routes->get('/api/student/dashboard', 'Api\StudentController::dashboard');
+$routes->post('/api/student/checkin', 'Api\StudentController::checkin');
+$routes->post('/api/student/checkout', 'Api\StudentController::checkout');
+
+// Admin API (Protected - requires session)
+$routes->get('/api/admin/dashboard', 'Api\AdminController::dashboard');
+$routes->get('/api/admin/attendance', 'Api\AdminController::attendance');
+$routes->get('/api/admin/classes', 'Api\AdminController::classes');
+
+// ===============================================
 // Auth Routes (Tanpa Filter)
 // ===============================================
 $routes->get('/login', 'AuthController::index');
@@ -41,6 +60,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function ($routes) {
     $routes->get('qr-location/create', 'QrLocation::create');
     $routes->get('qr-location/debug-test', 'QrLocation::debugTest');
     $routes->post('qr-location/store', 'QrLocation::store');
+    $routes->post('qr-location/update', 'QrLocation::update');
     $routes->get('qr-location/(:num)/edit', 'QrLocation::edit/$1');
     $routes->post('qr-location/(:num)/update', 'QrLocation::update/$1');
     $routes->get('qr-location/(:num)/delete', 'QrLocation::delete/$1');
@@ -52,6 +72,15 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function ($routes) {
     $routes->get('qr-daily/(:num)/show', 'QrDaily::show/$1');
     $routes->get('qr-daily/(:num)/print', 'QrDaily::printQr/$1');
     $routes->post('api/qr/validate', 'QrDaily::validateQr');
+
+    // Monitor QR (NEW - Untuk display di monitor)
+    $routes->get('monitor/select', 'MonitorQr::selectLocation');
+    $routes->get('monitor/display/(:num)', 'MonitorQr::display/$1');
+    $routes->get('api/monitor/qr/(:num)', 'MonitorQr::getQrData/$1');
+
+    // Absensi (Admin)
+    $routes->get('absensi', 'AbsensiController::index');
+    $routes->get('absensi/export-pdf', 'AbsensiController::exportPDF');
 
     // Pengaturan Jam Sekolah
     $routes->get('pengaturan', 'PengaturanController::index');

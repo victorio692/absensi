@@ -1,11 +1,11 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('content') ?>
-<div class="container-fluid mt-4">
+<div class="container-fluid">
     <!-- Header -->
     <div class="row mb-4">
-        <div class="col-md-8">
-            <h2 class="fw-bold">
+        <div class="col-12">
+            <h2 class="fw-bold mb-2">
                 <i class="fas fa-plus-circle text-primary"></i> Tambah Lokasi QR Code
             </h2>
             <p class="text-muted">Tambahkan lokasi baru untuk QR Code sekolah</p>
@@ -14,7 +14,7 @@
 
     <!-- Form Card -->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-12 col-md-8 col-lg-6">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white">
                     <h5 class="card-title mb-0">

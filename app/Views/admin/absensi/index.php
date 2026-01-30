@@ -4,14 +4,24 @@
 
 <?= $this->section('content') ?>
 
-<h1 class="mb-4"><i class="fas fa-clipboard-list"></i> Data Absensi</h1>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-sm-row gap-3">
+    <h1 class="mb-0"><i class="fas fa-clipboard-list"></i> Data Absensi</h1>
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-success btn-sm" onclick="exportToExcel()">
+            <i class="fas fa-file-excel"></i> Export Excel
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="exportToPDF()">
+            <i class="fas fa-file-pdf"></i> Export PDF
+        </button>
+    </div>
+</div>
 
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-filter"></i> Filter Data
     </div>
     <div class="card-body">
-        <form method="GET" action="/admin/absensi" class="row g-3">
+        <form method="GET" action="/admin/absensi" class="row g-3" id="filterForm">
             <div class="col-md-3">
                 <label for="siswa_id" class="form-label">Siswa</label>
                 <select class="form-select" id="siswa_id" name="siswa_id">
@@ -54,7 +64,7 @@
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="absensiTable">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -91,5 +101,22 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+<script>
+    function exportToExcel() {
+        const table = document.getElementById('absensiTable');
+        const wb = XLSX.utils.table_to_book(table, {sheet: 'Absensi'});
+        const fileName = 'Laporan_Absensi_' + new Date().toISOString().split('T')[0] + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+    }
+
+    function exportToPDF() {
+        const form = document.getElementById('filterForm');
+        const params = new URLSearchParams(new FormData(form));
+        // Open in new tab untuk view dan bisa print
+        window.open('<?= base_url('admin/absensi/export-pdf') ?>?' + params.toString(), '_blank');
+    }
+</script>
 
 <?= $this->endSection() ?>

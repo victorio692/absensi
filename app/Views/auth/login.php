@@ -245,9 +245,9 @@
         </div>
 
         <div style="text-align: center; margin-top: 30px; color: white; font-size: 13px;">
-            <p style="margin: 0;">© 2025 Sistem Informasi Absensi Siswa | PKL SMK</p>
+            <p style="margin: 0;">2025 Sistem Informasi Absensi Siswa | PKL SMK</p>
             <p style="margin-top: 10px;">
-                <a href="/register" style="color: white; text-decoration: underline;">Belum punya akun? Daftar di sini</a>
+              
             </p>
         </div>
     </div>
