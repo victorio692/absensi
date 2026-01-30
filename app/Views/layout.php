@@ -286,6 +286,9 @@
                 <li><a href="/admin/absensi" class="<?= strpos($title, 'Laporan') !== false ? 'active' : '' ?>">
                     <i class="fas fa-file-chart-line"></i> Laporan Absensi
                 </a></li>
+                <li><a href="/admin/izin-sakit" class="<?= strpos($title, 'Izin|Sakit') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-file-medical-alt"></i> Manajemen Izin & Sakit
+                </a></li>
             </ul>
         </aside>
     <?php elseif (session()->get('user_role') === 'siswa'): ?>
@@ -300,8 +303,11 @@
                 <li><a href="/siswa/absen-pulang" class="<?= strpos($title, 'Absen Pulang') !== false ? 'active' : '' ?>">
                     <i class="fas fa-sign-out-alt"></i> Absen Pulang
                 </a></li>
-                <li><a href="/siswa/riwayat" class="<?= strpos($title, 'Riwayat') !== false ? 'active' : '' ?>">
+                <li><a href="/siswa/riwayat" class="<?= strpos($title, 'Riwayat Absensi') !== false ? 'active' : '' ?>">
                     <i class="fas fa-history"></i> Riwayat Absensi
+                </a></li>
+                <li><a href="/siswa/izin-sakit-create" class="<?= strpos($title, 'Pengajuan Izin|Riwayat Pengajuan') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-file-medical-alt"></i> Izin / Sakit
                 </a></li>
             </ul>
         </aside>

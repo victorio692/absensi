@@ -86,7 +86,15 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function ($routes) {
     $routes->get('pengaturan', 'PengaturanController::index');
     $routes->post('pengaturan/update', 'PengaturanController::update');
 
-    // Verifikasi Izin/Sakit
+    // Manajemen Izin & Sakit (NEW)
+    $routes->get('izin-sakit', 'AdminIzinSakit::index');
+    $routes->get('izin-sakit-detail/(:num)', 'AdminIzinSakit::detail/$1');
+    $routes->post('izin-sakit-approve/(:num)', 'AdminIzinSakit::approve/$1');
+    $routes->post('izin-sakit-reject/(:num)', 'AdminIzinSakit::reject/$1');
+    $routes->post('izin-sakit-delete/(:num)', 'AdminIzinSakit::delete/$1');
+    $routes->get('izin-sakit-download-bukti/(:num)', 'AdminIzinSakit::downloadBukti/$1');
+
+    // Verifikasi Izin/Sakit (Legacy)
     $routes->get('izin', 'IzinController::admin');
     $routes->get('izin/(:num)/verifikasi', 'IzinController::verifikasi/$1');
     $routes->post('izin/(:num)/updateStatus', 'IzinController::updateStatus/$1');
@@ -120,16 +128,13 @@ $routes->group('siswa', ['filter' => 'auth:siswa'], static function ($routes) {
 });
 
 // ===============================================
-// Izin Routes (Siswa - Dengan Filter Auth)
+// Siswa Izin/Sakit Routes (Dengan Filter Auth)
 // ===============================================
-$routes->group('izin', ['filter' => 'auth:siswa'], static function ($routes) {
-    // Daftar izin
-    $routes->get('/', 'IzinController::index');
-
-    // Ajukan izin
-    $routes->get('create', 'IzinController::create');
-    $routes->post('store', 'IzinController::store');
-
-    // Hapus izin
-    $routes->get('(:num)/delete', 'IzinController::delete/$1');
+$routes->group('siswa', ['filter' => 'auth:siswa'], static function ($routes) {
+    // Izin/Sakit (NEW)
+    $routes->get('izin-sakit-create', 'IzinSakit::create');
+    $routes->post('izin-sakit-store', 'IzinSakit::store');
+    $routes->get('izin-sakit-riwayat', 'IzinSakit::riwayat');
+    $routes->get('izin-sakit-detail/(:num)', 'IzinSakit::detail/$1');
+    $routes->get('izin-sakit-download-bukti/(:num)', 'IzinSakit::downloadBukti/$1');
 });

@@ -110,15 +110,30 @@ if (!function_exists('badgeStatus')) {
      */
     function badgeStatus($status)
     {
+        if ($status === null) $status = '';
+        
+        // Capitalize first letter
+        $statusLabel = ucfirst(strtolower($status));
+        
         $colors = [
             'Hadir'     => 'success',
             'Terlambat' => 'warning',
-            'Izin'      => 'info',
-            'Sakit'     => 'danger',
+            'Izin'      => 'primary',
+            'Sakit'     => 'secondary',
+            'Alpha'     => 'danger',
         ];
 
-        $color = $colors[$status] ?? 'secondary';
+        $color = $colors[$statusLabel] ?? 'secondary';
+        
+        // Special styling for custom colors
+        if ($statusLabel === 'Izin') {
+            return "<span class='badge' style='background-color: #667eea;'>{$statusLabel}</span>";
+        } elseif ($statusLabel === 'Sakit') {
+            return "<span class='badge' style='background-color: #764ba2;'>{$statusLabel}</span>";
+        } elseif ($statusLabel === 'Alpha') {
+            return "<span class='badge bg-danger'>{$statusLabel}</span>";
+        }
 
-        return "<span class='badge bg-{$color}'>{$status}</span>";
+        return "<span class='badge bg-{$color}'>{$statusLabel}</span>";
     }
 }

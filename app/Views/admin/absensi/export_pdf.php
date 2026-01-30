@@ -99,6 +99,21 @@
             font-size: 11px;
         }
 
+        .status.izin {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .status.sakit {
+            background-color: #764ba2;
+            color: white;
+        }
+
+        .status.alpha {
+            background-color: #dc3545;
+            color: white;
+        }
+
         .status.hadir {
             background: #d4edda;
             color: #155724;
@@ -203,12 +218,17 @@
             <?php
             $hadir = 0;
             $terlambat = 0;
-            $tidak = 0;
+            $izin = 0;
+            $sakit = 0;
+            $alpha = 0;
 
             foreach ($absensi as $a) {
-                if ($a['status'] === 'Hadir') $hadir++;
-                elseif ($a['status'] === 'Terlambat') $terlambat++;
-                else $tidak++;
+                $status = strtolower($a['status']);
+                if ($status === 'hadir') $hadir++;
+                elseif ($status === 'terlambat') $terlambat++;
+                elseif ($status === 'izin') $izin++;
+                elseif ($status === 'sakit') $sakit++;
+                elseif ($status === 'alpha') $alpha++;
             }
             ?>
             <div class="summary">
@@ -221,8 +241,16 @@
                     <div class="value" style="color: #ffc107;"><?= $terlambat ?></div>
                 </div>
                 <div class="summary-item">
-                    <h4>Tidak Hadir</h4>
-                    <div class="value" style="color: #dc3545;"><?= $tidak ?></div>
+                    <h4>Izin</h4>
+                    <div class="value" style="color: #667eea;"><?= $izin ?></div>
+                </div>
+                <div class="summary-item">
+                    <h4>Sakit</h4>
+                    <div class="value" style="color: #764ba2;"><?= $sakit ?></div>
+                </div>
+                <div class="summary-item">
+                    <h4>Alpha</h4>
+                    <div class="value" style="color: #dc3545;"><?= $alpha ?></div>
                 </div>
             </div>
         <?php endif; ?>
