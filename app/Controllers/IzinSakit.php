@@ -75,7 +75,7 @@ class IzinSakit extends BaseController
         // Cek apakah sudah ada absensi untuk tanggal tersebut
         $existingAbsensi = $this->absensiModel
             ->where('siswa_id', $siswa_id)
-            ->where('DATE(created_at)', 'DATE("' . $tanggal . '")')
+            ->where('DATE(created_at)', $tanggal)
             ->first();
 
         if ($existingAbsensi) {
