@@ -15,6 +15,11 @@ $routes->post('/api/auth/login-siswa', 'Api\AuthController::loginSiswa');
 $routes->post('/api/auth/login-admin', 'Api\AuthController::loginAdmin');
 $routes->get('/api/auth/logout', 'Api\AuthController::logout');
 
+// Notes API (Protected - requires session)
+$routes->get('/api/notes', 'Api\NotesController::index');
+$routes->post('/api/notes/(:num)/read', 'Api\NotesController::markRead/$1');
+$routes->delete('/api/notes/(:num)', 'Api\NotesController::delete/$1');
+
 // Student API (Protected - requires session)
 $routes->get('/api/student/dashboard', 'Api\StudentController::dashboard');
 $routes->post('/api/student/checkin', 'Api\StudentController::checkin');
@@ -35,9 +40,11 @@ $routes->post('/auth/processRegister', 'AuthController::processRegister');
 $routes->get('/logout', 'AuthController::logout');
 
 // ===============================================
-// Redirect default ke login jika belum login
+// Landing Page & Default Route
 // ===============================================
-$routes->get('/', 'AuthController::redirectHome');
+$routes->get('/', static function() {
+    return view('landing');
+});
 
 // ===============================================
 // Admin Routes (Dengan Filter Auth)

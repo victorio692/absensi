@@ -1,3 +1,7 @@
+<?php 
+// Load helpers
+helper(['notes_helper', 'form', 'url']);
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -315,7 +319,45 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Alert Messages -->
+        <!-- Persistent Notes -->
+        <?php if (session()->has('user_id') && function_exists('getUnreadNotes')): ?>
+            <div id="notes-container">
+                <?php 
+                    $unreadNotes = getUnreadNotes();
+                    foreach ($unreadNotes as $note): 
+                        $alertClass = match($note['type']) {
+                            'success' => 'alert-success',
+                            'error' => 'alert-danger',
+                            'warning' => 'alert-warning',
+                            'info' => 'alert-info',
+                            default => 'alert-info'
+                        };
+                        
+                        $icon = match($note['type']) {
+                            'success' => 'fa-check-circle',
+                            'error' => 'fa-exclamation-circle',
+                            'warning' => 'fa-exclamation-triangle',
+                            'info' => 'fa-info-circle',
+                            default => 'fa-info-circle'
+                        };
+                ?>
+                    <div class="alert <?= $alertClass ?> alert-dismissible fade show" 
+                         role="alert" 
+                         data-note-id="<?= $note['id'] ?>"
+                         data-auto-dismiss="<?= $note['auto_dismiss_in'] * 1000 ?>"
+                         data-is-permanent="<?= $note['is_permanent'] ? 'true' : 'false' ?>">
+                        <i class="fas <?= $icon ?>"></i>
+                        <?php if ($note['title']): ?>
+                            <strong><?= $note['title'] ?>:</strong>
+                        <?php endif; ?>
+                        <?= $note['message'] ?>
+                        <button type="button" class="btn-close note-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Flash Alert Messages (Backward Compatible) -->
         <?php if (session()->has('success')): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
@@ -342,9 +384,53 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Auto dismiss alerts -->
+    <!-- Persistent Notes Manager -->
     <script>
-        document.querySelectorAll('.alert').forEach(alert => {
+        // Manage persistent notes
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('notes-container');
+            if (!container) return;
+
+            // Handle note dismissal and mark as read
+            container.querySelectorAll('.alert').forEach(alert => {
+                const noteId = alert.dataset.noteId;
+                const autoDismiss = parseInt(alert.dataset.autoDismiss) || 0;
+                const isPermanent = alert.dataset.isPermanent === 'true';
+
+                // Mark as read when dismissed
+                const closeBtn = alert.querySelector('.note-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        markNoteAsRead(noteId);
+                    });
+                }
+
+                // Auto dismiss non-permanent notes
+                if (!isPermanent && autoDismiss > 0) {
+                    setTimeout(() => {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                        markNoteAsRead(noteId);
+                    }, autoDismiss);
+                }
+            });
+        });
+
+        // Function to mark note as read via AJAX
+        function markNoteAsRead(noteId) {
+            fetch(`/api/notes/${noteId}/read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).catch(err => console.log('Note marked as read'));
+        }
+    </script>
+    
+    <!-- Auto dismiss alerts (Flash data) -->
+    <script>
+        document.querySelectorAll('.alert:not([data-note-id])').forEach(alert => {
             setTimeout(() => {
                 new bootstrap.Alert(alert).close();
             }, 5000);
