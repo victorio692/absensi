@@ -4,77 +4,239 @@
 
 <?= $this->section('content') ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-history"></i> Riwayat Absensi</h1>
+<style>
+    .page-header {
+        margin-bottom: var(--spacing-3xl);
+    }
+
+    .page-header h1 {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        font-weight: 800;
+        color: var(--color-text);
+    }
+
+    .filter-card {
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: var(--spacing-lg);
+        border: 1px solid var(--color-border);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+        align-items: flex-end;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: var(--spacing-sm);
+        font-size: var(--font-sm);
+    }
+
+    .form-control-modern select {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        font-size: var(--font-base);
+        font-family: inherit;
+        color: var(--color-text);
+        background-color: var(--color-surface);
+        transition: all var(--transition-fast);
+    }
+
+    .form-control-modern select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-3xl);
+    }
+
+    .stat-card {
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-lg);
+        border-left: 4px solid var(--color-primary);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-smooth);
+        border: 1px solid var(--color-border);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-card.success {
+        border-left-color: var(--color-success);
+    }
+
+    .stat-card.warning {
+        border-left-color: var(--color-warning);
+    }
+
+    .stat-card.info {
+        border-left-color: var(--color-info);
+    }
+
+    .stat-card-label {
+        font-size: var(--font-sm);
+        color: var(--color-text-secondary);
+        font-weight: 500;
+        margin-bottom: var(--spacing-sm);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .stat-card-label i {
+        color: var(--color-primary);
+    }
+
+    .stat-card.success .stat-card-label i {
+        color: var(--color-success);
+    }
+
+    .stat-card.warning .stat-card-label i {
+        color: var(--color-warning);
+    }
+
+    .stat-card.info .stat-card-label i {
+        color: var(--color-info);
+    }
+
+    .stat-card-value {
+        font-size: var(--font-3xl);
+        font-weight: 800;
+        color: var(--color-text);
+    }
+
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-modern thead {
+        background-color: var(--color-background-secondary);
+    }
+
+    .table-modern th {
+        padding: var(--spacing-md) var(--spacing-lg);
+        text-align: left;
+        font-weight: 700;
+        color: var(--color-text);
+        border-bottom: 2px solid var(--color-border);
+        font-size: var(--font-sm);
+    }
+
+    .table-modern td {
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-bottom: 1px solid var(--color-border);
+        color: var(--color-text-secondary);
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: var(--color-surface-hover);
+    }
+
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>
+        <i class="fas fa-history"></i> Riwayat Absensi
+    </h1>
 </div>
 
-<!-- Filter Bulan -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="GET" action="/siswa/riwayat" class="row g-3">
-            <div class="col-md-3">
-                <label for="bulan" class="form-label">Bulan</label>
-                <select class="form-select" id="bulan" name="bulan">
-                    <?php for ($i = 1; $i <= 12; $i++): ?>
-                        <option value="<?= sprintf('%02d', $i) ?>" <?= $bulan == sprintf('%02d', $i) ? 'selected' : '' ?>>
-                            <?= \DateTime::createFromFormat('!m', $i)->format('F') ?>
-                        </option>
-                    <?php endfor; ?>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="tahun" class="form-label">Tahun</label>
-                <select class="form-select" id="tahun" name="tahun">
-                    <?php for ($i = date('Y') - 2; $i <= date('Y'); $i++): ?>
-                        <option value="<?= $i ?>" <?= $tahun == $i ? 'selected' : '' ?>><?= $i ?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
-            <div class="col-md-6 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-search"></i> Lihat Riwayat
-                </button>
-            </div>
-        </form>
-    </div>
+<!-- Filter Card -->
+<div class="filter-card">
+    <form method="GET" action="/siswa/riwayat" class="form-grid">
+        <div class="form-group">
+            <label for="bulan" class="form-label">Bulan</label>
+            <select class="form-control-modern" id="bulan" name="bulan">
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                    <option value="<?= sprintf('%02d', $i) ?>" <?= $bulan == sprintf('%02d', $i) ? 'selected' : '' ?>>
+                        <?= \DateTime::createFromFormat('!m', $i)->format('F') ?>
+                    </option>
+                <?php endfor; ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tahun" class="form-label">Tahun</label>
+            <select class="form-control-modern" id="tahun" name="tahun">
+                <?php for ($i = date('Y') - 2; $i <= date('Y'); $i++): ?>
+                    <option value="<?= $i ?>" <?= $tahun == $i ? 'selected' : '' ?>><?= $i ?></option>
+                <?php endfor; ?>
+            </select>
+        </div>
+        <button type="submit" class="btn-modern btn-primary" style="padding: var(--spacing-md) var(--spacing-lg);">
+            <i class="fas fa-search"></i> Lihat Riwayat
+        </button>
+    </form>
 </div>
 
 <!-- Statistik -->
-<div class="row mb-4">
-    <div class="col-md-3">
-        <div class="stat-card">
-            <h6><i class="fas fa-calendar"></i> Periode</h6>
-            <h3><?= $bulan ?>/<?= $tahun ?></h3>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-label">
+            <i class="fas fa-calendar"></i> Periode
         </div>
+        <div class="stat-card-value"><?= $bulan ?>/<?= $tahun ?></div>
     </div>
-    <div class="col-md-3">
-        <div class="stat-card" style="border-left-color: #48bb78;">
-            <h6><i class="fas fa-check-circle"></i> Hadir</h6>
-            <h3><?= $hadir ?></h3>
+    <div class="stat-card success">
+        <div class="stat-card-label">
+            <i class="fas fa-check-circle"></i> Hadir
         </div>
+        <div class="stat-card-value"><?= $hadir ?></div>
     </div>
-    <div class="col-md-3">
-        <div class="stat-card" style="border-left-color: #ed8936;">
-            <h6><i class="fas fa-hourglass-start"></i> Terlambat</h6>
-            <h3><?= $terlambat ?></h3>
+    <div class="stat-card warning">
+        <div class="stat-card-label">
+            <i class="fas fa-hourglass-start"></i> Terlambat
         </div>
+        <div class="stat-card-value"><?= $terlambat ?></div>
     </div>
-    <div class="col-md-3">
-        <div class="stat-card" style="border-left-color: #4299e1;">
-            <h6><i class="fas fa-list"></i> Total</h6>
-            <h3><?= $total ?></h3>
+    <div class="stat-card info">
+        <div class="stat-card-label">
+            <i class="fas fa-list"></i> Total
         </div>
+        <div class="stat-card-value"><?= $total ?></div>
     </div>
 </div>
 
 <!-- Tabel Riwayat -->
-<div class="card">
-    <div class="card-header">
+<div class="card-modern">
+    <div class="card-header-modern">
         <i class="fas fa-table"></i> Detail Absensi
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
+    <div class="card-body-modern">
+        <div style="overflow-x: auto;">
+            <table class="table-modern">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -99,7 +261,9 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" class="text-center">Belum ada data absensi untuk bulan ini</td>
+                            <td colspan="6" style="text-align: center; padding: var(--spacing-xl); color: var(--color-text-tertiary);">
+                                Belum ada data absensi untuk bulan ini
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

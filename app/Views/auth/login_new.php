@@ -49,7 +49,7 @@
             padding: var(--spacing-lg);
         }
 
-        .login-container {
+        .login-wrapper {
             width: 100%;
             max-width: 450px;
         }
@@ -80,10 +80,9 @@
             text-align: center;
         }
 
-        .login-header i {
+        .login-header-icon {
             font-size: 2.5rem;
             margin-bottom: var(--spacing-md);
-            display: block;
         }
 
         .login-header h2 {
@@ -204,7 +203,7 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        .input-hint {
+        .form-hint {
             font-size: 0.8125rem;
             color: var(--color-text-tertiary);
             margin-top: var(--spacing-sm);
@@ -240,23 +239,24 @@
             margin: var(--spacing-xl) 0;
         }
 
-        #register-box {
+        .register-box {
             background: rgba(79, 70, 229, 0.05);
             border: 1px solid rgba(79, 70, 229, 0.2);
             border-left: 4px solid var(--color-primary);
             border-radius: var(--radius-lg);
             padding: var(--spacing-lg);
             text-align: center;
+            display: none;
         }
 
-        #register-box p {
+        .register-box p {
             margin: 0 0 var(--spacing-md);
             color: var(--color-text);
             font-weight: 700;
             font-size: 0.875rem;
         }
 
-        #register-box a {
+        .register-box a {
             display: inline-block;
             background: var(--color-primary);
             color: white;
@@ -271,19 +271,19 @@
             gap: var(--spacing-sm);
         }
 
-        #register-box a:hover {
+        .register-box a:hover {
             background: var(--color-primary-dark);
             transform: translateY(-2px);
         }
 
-        .footer-text {
+        .footer {
             text-align: center;
             margin-top: var(--spacing-2xl);
             color: white;
             font-size: 0.8125rem;
         }
 
-        .footer-text p {
+        .footer p {
             margin: 0;
         }
 
@@ -303,11 +303,13 @@
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="login-wrapper">
         <div class="login-card">
             <!-- Header -->
             <div class="login-header">
-                <i class="fas fa-qrcode"></i>
+                <div class="login-header-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
                 <h2>Absensi</h2>
                 <p>Sistem Informasi Absensi Siswa QR Code</p>
             </div>
@@ -350,7 +352,7 @@
                         </label>
                         <input type="text" class="form-control" id="username" name="username" 
                                placeholder="Masukkan username" autofocus required>
-                        <div class="input-hint" id="username-hint">Gunakan akun admin</div>
+                        <div class="form-hint" id="username-hint">Gunakan akun admin</div>
                     </div>
 
                     <div class="form-group">
@@ -360,7 +362,7 @@
                         </label>
                         <input type="password" class="form-control" id="password" name="password" 
                                placeholder="Masukkan password" required>
-                        <div class="input-hint" id="password-hint"></div>
+                        <div class="form-hint" id="password-hint"></div>
                     </div>
 
                     <button type="submit" class="btn-login">
@@ -370,7 +372,7 @@
 
                 <!-- Register Box -->
                 <hr class="divider" id="register-divider" style="display: none;">
-                <div id="register-box" style="display: none;">
+                <div id="register-box" class="register-box">
                     <p>Belum punya akun?</p>
                     <a href="/register">
                         <i class="fas fa-user-plus"></i> Daftar Sekarang
@@ -379,7 +381,7 @@
             </div>
         </div>
 
-        <div class="footer-text">
+        <div class="footer">
             <p>&copy; 2025 Sistem Informasi Absensi Siswa | PKL SMK</p>
         </div>
     </div>

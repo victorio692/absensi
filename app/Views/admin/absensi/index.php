@@ -4,67 +4,202 @@
 
 <?= $this->section('content') ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-sm-row gap-3">
-    <h1 class="mb-0"><i class="fas fa-clipboard-list"></i> Data Absensi</h1>
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-success btn-sm" onclick="exportToExcel()">
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-3xl);
+        flex-wrap: wrap;
+    }
+
+    .page-header h1 {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        font-weight: 800;
+        color: var(--color-text);
+        margin: 0;
+    }
+
+    .button-group {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-card {
+        background: var(--color-surface);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: var(--spacing-lg);
+        border: 1px solid var(--color-border);
+    }
+
+    .filter-header {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .filter-header i {
+        color: var(--color-primary);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+        align-items: flex-end;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: var(--spacing-sm);
+        font-size: var(--font-sm);
+    }
+
+    .form-control-modern,
+    .form-control-modern select {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        font-size: var(--font-base);
+        font-family: inherit;
+        color: var(--color-text);
+        background-color: var(--color-surface);
+        transition: all var(--transition-fast);
+    }
+
+    .form-control-modern:focus,
+    .form-control-modern select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-modern thead {
+        background-color: var(--color-background-secondary);
+    }
+
+    .table-modern th {
+        padding: var(--spacing-md) var(--spacing-lg);
+        text-align: left;
+        font-weight: 700;
+        color: var(--color-text);
+        border-bottom: 2px solid var(--color-border);
+        font-size: var(--font-sm);
+    }
+
+    .table-modern td {
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-bottom: 1px solid var(--color-border);
+        color: var(--color-text-secondary);
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: var(--color-surface-hover);
+    }
+
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .button-group {
+            width: 100%;
+        }
+
+        .button-group .btn-modern {
+            flex: 1;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>
+        <i class="fas fa-clipboard-list"></i> Data Absensi
+    </h1>
+    <div class="button-group">
+        <button type="button" class="btn-modern btn-success" onclick="exportToExcel()">
             <i class="fas fa-file-excel"></i> Export Excel
         </button>
-        <button type="button" class="btn btn-danger btn-sm" onclick="exportToPDF()">
+        <button type="button" class="btn-modern btn-danger" onclick="exportToPDF()">
             <i class="fas fa-file-pdf"></i> Export PDF
         </button>
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header">
+<!-- Filter Card -->
+<div class="filter-card">
+    <div class="filter-header">
         <i class="fas fa-filter"></i> Filter Data
     </div>
-    <div class="card-body">
-        <form method="GET" action="/admin/absensi" class="row g-3" id="filterForm">
-            <div class="col-md-3">
-                <label for="siswa_id" class="form-label">Siswa</label>
-                <select class="form-select" id="siswa_id" name="siswa_id">
-                    <option value="">-- Semua Siswa --</option>
-                    <?php foreach ($siswaList as $s): ?>
-                        <option value="<?= $s['id'] ?>" <?= $filters['siswa_id'] == $s['id'] ? 'selected' : '' ?>>
-                            <?= $s['nama'] ?> (<?= $s['nis'] ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="kelas" class="form-label">Kelas</label>
-                <select class="form-select" id="kelas" name="kelas">
-                    <option value="">-- Semua Kelas --</option>
-                    <?php foreach ($kelasList as $k): ?>
-                        <option value="<?= $k['kelas'] ?>" <?= $filters['kelas'] == $k['kelas'] ? 'selected' : '' ?>>
-                            <?= $k['kelas'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label for="start_date" class="form-label">Dari Tanggal</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" value="<?= $filters['start_date'] ?>">
-            </div>
-            <div class="col-md-2">
-                <label for="end_date" class="form-label">Sampai Tanggal</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" value="<?= $filters['end_date'] ?>">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-search"></i> Cari
-                </button>
-            </div>
-        </form>
-    </div>
+    <form method="GET" action="/admin/absensi" class="form-grid" id="filterForm">
+        <div class="form-group">
+            <label for="siswa_id" class="form-label">Siswa</label>
+            <select class="form-control-modern" id="siswa_id" name="siswa_id">
+                <option value="">-- Semua Siswa --</option>
+                <?php foreach ($siswaList as $s): ?>
+                    <option value="<?= $s['id'] ?>" <?= $filters['siswa_id'] == $s['id'] ? 'selected' : '' ?>>
+                        <?= $s['nama'] ?> (<?= $s['nis'] ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="kelas" class="form-label">Kelas</label>
+            <select class="form-control-modern" id="kelas" name="kelas">
+                <option value="">-- Semua Kelas --</option>
+                <?php foreach ($kelasList as $k): ?>
+                    <option value="<?= $k['kelas'] ?>" <?= $filters['kelas'] == $k['kelas'] ? 'selected' : '' ?>>
+                        <?= $k['kelas'] ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="start_date" class="form-label">Dari Tanggal</label>
+            <input type="date" class="form-control-modern" id="start_date" name="start_date" value="<?= $filters['start_date'] ?>">
+        </div>
+        <div class="form-group">
+            <label for="end_date" class="form-label">Sampai Tanggal</label>
+            <input type="date" class="form-control-modern" id="end_date" name="end_date" value="<?= $filters['end_date'] ?>">
+        </div>
+        <button type="submit" class="btn-modern btn-primary" style="height: 44px; display: flex; align-items: center; gap: var(--spacing-sm);">
+            <i class="fas fa-search"></i> Cari
+        </button>
+    </form>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover" id="absensiTable">
+<!-- Data Table Card -->
+<div class="card-modern">
+    <div class="card-body-modern">
+        <div style="overflow-x: auto;">
+            <table class="table-modern" id="absensiTable">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -93,7 +228,9 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="text-center">Belum ada data absensi</td>
+                            <td colspan="8" style="text-align: center; padding: var(--spacing-xl); color: var(--color-text-tertiary);">
+                                Belum ada data absensi
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -114,7 +251,6 @@
     function exportToPDF() {
         const form = document.getElementById('filterForm');
         const params = new URLSearchParams(new FormData(form));
-        // Open in new tab untuk view dan bisa print
         window.open('<?= base_url('admin/absensi/export-pdf') ?>?' + params.toString(), '_blank');
     }
 </script>

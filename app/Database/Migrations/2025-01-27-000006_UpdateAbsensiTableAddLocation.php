@@ -17,7 +17,7 @@ class UpdateAbsensiTableAddLocation extends Migration
             $this->forge->addColumn('absensi', [
                 'location_id' => [
                     'type'       => 'INT',
-                    'constraint' => 11,
+                    'unsigned'   => true,
                     'null'       => true,
                     'after'      => 'siswa_id',
                     'comment'    => 'Lokasi QR Code yang di-scan',
